@@ -11,7 +11,7 @@ local tpToggle = false
 function getClosest(mobs) -- // CREDITS TO AIKA // 
 	local closest = math.huge
 	local choice
-	for i,v in pairs (game:GetService("Workspace"):GetDescendants()) do
+	for i,v in pairs (game:GetService("Workspace").Monsters:GetDescendants()) do
 		if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0  then
 			local dist = (player.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).Magnitude
 			if dist <= closest then
@@ -38,7 +38,6 @@ local FarmTab = Window:MakeTab({
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
 })
-
 FarmTab:AddToggle({
 	Name = "TP TO MOB(CLOSEST)",
 	Default = false,

@@ -1,0 +1,70 @@
+-- // VARIABLES // 
+local player = game.Players.LocalPlayer
+local KillAuraToggle = false
+local tpToggle = false
+
+
+
+
+-- // FUNCTIONS //
+function getClosest(mobs) -- // CREDITS TO AIKA // 
+	local closest = math.huge
+	local choice
+	for i,v in pairs (game:GetService("Workspace").Monsters:GetDescendants()) do
+		if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0  then
+			local dist = (player.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).Magnitude
+			if dist <= closest then
+				closest = dist
+				choice = v
+			end
+		end
+	end
+ 
+   return choice
+ end
+
+
+ -- // ANTI AFK //
+for i, v in next, getconnections(game.Players.LocalPlayer.Idled) do
+    v:Disable();
+end;
+
+-- // UI LIB // 
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "Aeroila Hub  |  Anime Artifacts Simulator 2", HidePremium = false, IntroText = "Aeroila Hub | Anime Artifacts Simulator 2", SaveConfig = false, ConfigFolder = "OrionTest"})
+local FarmTab = Window:MakeTab({
+	Name = "Auto Farm",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+FarmTab:AddToggle({
+	Name = "TP TO MOB(CLOSEST)",
+	Default = false,
+	Callback = function(Value)
+	tpToggle = Value
+	end    
+})
+
+FarmTab:AddToggle({
+	Name = "KillAura",
+	Default = false,
+	Callback = function(Value)
+	KillAuraToggle = Value
+	end    
+})
+
+
+-- // SCRIPTS //
+task.spawn(function()
+	while task.wait(.000000001) do
+		if KillAuraToggle then
+	local mob = getClosest(mobs)
+		if tpToggle then
+			player.Character.HumanoidRootPart.CFrame = mob.HumanoidRootPart.CFrame
+		end
+		game:GetService("ReplicatedStorage").Events.DmgEvent:FireServer(mob)
+		end
+	end
+end)
+
+OrionLib:Init()

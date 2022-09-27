@@ -6,11 +6,12 @@ local tpToggle = false
 
 
 
+
 -- // FUNCTIONS //
 function getClosest(mobs) -- // CREDITS TO AIKA // 
 	local closest = math.huge
 	local choice
-	for i,v in pairs (game:GetService("Workspace").Monsters:GetDescendants()) do
+	for i,v in pairs (game:GetService("Workspace"):GetDescendants()) do
 		if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0  then
 			local dist = (player.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).Magnitude
 			if dist <= closest then
@@ -37,6 +38,7 @@ local FarmTab = Window:MakeTab({
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
 })
+
 FarmTab:AddToggle({
 	Name = "TP TO MOB(CLOSEST)",
 	Default = false,
@@ -44,7 +46,6 @@ FarmTab:AddToggle({
 	tpToggle = Value
 	end    
 })
-
 FarmTab:AddToggle({
 	Name = "KillAura",
 	Default = false,
@@ -56,15 +57,17 @@ FarmTab:AddToggle({
 
 -- // SCRIPTS //
 task.spawn(function()
-	while task.wait(.000000001) do
+	while task.wait(0.2) do
 		if KillAuraToggle then
 	local mob = getClosest(mobs)
 		if tpToggle then
 			player.Character.HumanoidRootPart.CFrame = mob.HumanoidRootPart.CFrame
 		end
-		game:GetService("ReplicatedStorage").Events.DmgEvent:FireServer(mob)
+		game:GetService("ReplicatedStorage").Events.SkillDmg:FireServer(mob,game:GetService("Players").LocalPlayer,"15701631.7386425")
 		end
 	end
 end)
+
+
 
 OrionLib:Init()

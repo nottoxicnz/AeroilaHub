@@ -63,7 +63,7 @@ task.spawn(function()
 		if tpToggle then
 			player.Character.HumanoidRootPart.CFrame = mob.HumanoidRootPart.CFrame
 		end
-		game:GetService("ReplicatedStorage").Events.SkillDmg:FireServer(mob,game:GetService("Players").LocalPlayer,"15701631.7386425")
+		game:GetService("ReplicatedStorage").Events.DmgEvent:FireServer(mob)
 		end
 	end
 end)

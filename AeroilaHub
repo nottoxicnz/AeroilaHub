@@ -38,6 +38,7 @@ local FarmTab = Window:MakeTab({
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
 })
+
 FarmTab:AddToggle({
 	Name = "TP TO MOB(CLOSEST)",
 	Default = false,

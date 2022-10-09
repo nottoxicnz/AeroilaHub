@@ -34,14 +34,14 @@
 		PremiumOnly = false
 
 	})
-	local DFTab = Window:MakeTab({
-		Name = "Devil Fruit Farm",
+	local QuestTab = Window:MakeTab({
+		Name = "Auto Quest",
 		Icon = "rbxassetid://4483345998",
 		PremiumOnly = false
 
 	})
-	local QuestTab = Window:MakeTab({
-		Name = "Auto Quest",
+	local DFTab = Window:MakeTab({
+		Name = "Devil Fruit Farm",
 		Icon = "rbxassetid://4483345998",
 		PremiumOnly = false
 

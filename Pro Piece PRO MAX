@@ -1,24 +1,33 @@
-	local player = game.Players.LocalPlayer
-	local VIM = game:service("VirtualInputManager")
-	local islandTeleportToggle = false
-	local attackToggle = false
-	local fruitToggle = false
-	local farmToggle = false
-	local questToggle = false
-	local instaToggle = false
-	local noclipToggle = false
-	local selectedIsland = "Starter Island"
-	local islands = {"Starter Island", "Desert", "Jungle Island", "Hima Island", "Island of Zou"}
-	local mobDropdown = "Thief"
-	local mobs = {}
-	local questDropdown = "Thief Quest"
-	local quests = {"Thief Quest", "Buff Thief Quest", "Desert Thief Quest", "Desert Swordsmand Quest", "Monkey Quest", "Buff Monkey Quest", "Blizzard Bandit Quest", "Yeti Quest", "Mink Quest", "Pro Mink Quest"}
-	for _,v in pairs(game:GetService("Workspace").World.Live:GetChildren()) do -- LOOPS THROUGH ALL MOBS
-		insert = true -- VALUE TO CHECK THE MOB
-		for _,v2 in pairs(mobs) do if v2 == v.Name then insert = false end end -- CHECKS IF MOB IS ALREADY IN THE TABLE
-		if insert then table.insert(mobs, v.Name) end -- IF THE MOB ISNT INSERTED THEN INSERT IT
+local player = game.Players.LocalPlayer
+local VIM = game:service("VirtualInputManager")
+local islandTeleportToggle = false
+local attackToggle = false
+local weaponToggle = false
+local fruitToggle = false
+local farmToggle = false
+local questToggle = false
+local instaToggle = false
+local selectedIsland = "Starter Island"
+local islands = {"Starter Island", "Desert", "Jungle Island", "Hima Island", "Island of Zou"}
+local mobDropdown = "Thief"
+local mobs = {}
+local questDropdown = "Thief Quest"
+local quests = {"Thief Quest", "Buff Thief Quest", "Desert Thief Quest", "Desert Swordsmand Quest", "Monkey Quest", "Buff Monkey Quest", "Blizzard Bandit Quest", "Yeti Quest", "Mink Quest", "Pro Mink Quest"}
+local weaponDropdown = "Combat"
+local weapons = {}
+for _,v in pairs(game:GetService("Workspace").World.Live:GetChildren()) do -- LOOPS THROUGH ALL MOBS
+	insert = true -- VALUE TO CHECK THE MOB
+	for _,v2 in pairs(mobs) do if v2 == v.Name then insert = false end end -- CHECKS IF MOB IS ALREADY IN THE TABLE
+	if insert then table.insert(mobs, v.Name) end -- IF THE MOB ISNT INSERTED THEN INSERT IT
+end
+table.sort(mobs)
+
+
+for i,v in pairs(player.Backpack:GetChildren()) do
+	if v:IsA("Tool") then
+		table.insert(weapons, v.Name)
 	end
-	table.sort(mobs)
+end
 
 -- // ANTI AFK //
 for i, v in next, getconnections(game.Players.LocalPlayer.Idled) do
@@ -26,13 +35,13 @@ for i, v in next, getconnections(game.Players.LocalPlayer.Idled) do
 end;
 
 	-- // REMOVE PLAYERS //
-	for i,players in pairs(game.Players:GetPlayers()) do
-		for i,v in pairs(mobs) do
-		if v == players.Name then
-			table.remove(mobs, i)
+for i,players in pairs(game.Players:GetPlayers()) do
+	for i,v in pairs(mobs) do
+	if v == players.Name then
+		table.remove(mobs, i)
 		end
 	end
-	end
+end
 
 -- // FUNCTIONS //
 
@@ -97,6 +106,22 @@ end
 			farmToggle = Value
 		end
 	})
+	FarmTab:AddLabel(" ")
+	FarmTab:AddDropdown({
+		Name = "Select Weapon To Farm With",
+		Default = weaponDropdown,
+		Options = weapons,
+		Callback = function(Value)
+		weaponDropdown = Value
+		end    
+		})
+		FarmTab:AddToggle({
+			Name = "Auto Equip",
+			Default = false,
+			Callback = function(Value)
+				weaponToggle = Value
+			end
+		})
 	FarmTab:AddToggle({
 		Name = "Auto Attack",
 		Default = false,
@@ -111,6 +136,7 @@ end
 			instaToggle = Value
 		end
 	})
+	FarmTab:AddLabel(" ")
 	QuestTab:AddDropdown({
 		Name = "Select Quest",
 		Default = questDropdown,
@@ -216,26 +242,40 @@ IslandTab:AddButton({
 	task.spawn(function ()
 		while task.wait() do
 			if attackToggle then
-				workspace.World.Live[player.Name]:WaitForChild("Combat").Server.RemoteEvent:FireServer("M1")
+			workspace.World.Live[player.Name][weaponDropdown].Server.RemoteEvent:FireServer("M1")
+		end
+	end
+end)
+
+task.spawn(function ()
+while task.wait() do
+	if fruitToggle then
+		for i,v in pairs(game:GetService("Workspace").DFSpawns:GetDescendants()) do
+			if v.Name == "Handle" and v.ClassName == "MeshPart" and v.Parent then
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
+			task.wait(0.3)
+			local function hold(keyCode, time)
+			VIM:SendKeyEvent(true, keyCode, false, game)
+			task.wait(time)
+			VIM:SendKeyEvent(false, keyCode, false, game)
+			end
+			hold(Enum.KeyCode.LeftControl, 5)
 			end
 		end
-	end)
-	task.spawn(function ()
-		while task.wait() do
-			if fruitToggle then
-			   for i,v in pairs(game:GetService("Workspace").DFSpawns:GetDescendants()) do
-					if v.Name == "Handle" and v.ClassName == "MeshPart" and v.Parent then
-						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
-						task.wait(0.5)
-				local function hold(keyCode, time)
-				VIM:SendKeyEvent(true, keyCode, false, game)
-				task.wait(time)
-				VIM:SendKeyEvent(false, keyCode, false, game)
-				end
-				hold(Enum.KeyCode.LeftControl, 5)
+	end
+end
+end)
+
+task.spawn(function ()
+	while task.wait() do
+		if weaponToggle then
+			for i,v in pairs(player.Backpack:GetChildren()) do
+				if v.name == weaponDropdown then
+					v.Parent = player.Character
 				end
 			end
 		end
 	end
 end)
 
+OrionLib:Init()

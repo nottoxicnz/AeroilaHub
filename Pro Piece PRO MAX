@@ -1,11 +1,14 @@
 	local player = game.Players.LocalPlayer
 	local VIM = game:service("VirtualInputManager")
+	local islandTeleportToggle = false
 	local attackToggle = false
 	local fruitToggle = false
 	local farmToggle = false
 	local questToggle = false
 	local instaToggle = false
 	local noclipToggle = false
+	local selectedIsland = "Starter Island"
+	local islands = {"Starter Island", "Desert", "Jungle Island", "Hima Island", "Island of Zou"}
 	local mobDropdown = "Thief"
 	local mobs = {}
 	local questDropdown = "Thief Quest"
@@ -31,6 +34,28 @@ end;
 	end
 	end
 
+-- // FUNCTIONS //
+
+function tpToIslands()
+	if selectedIsland == "Starter Island" then
+		player.Character.HumanoidRootPart.CFrame = CFrame.new(-23.2552795, 116.013466, 269.995972)
+	elseif 
+	selectedIsland == "Desert" then
+		player.Character.HumanoidRootPart.CFrame = CFrame.new(-419.57431, 117.407639, -1898.2561)
+	elseif 
+	selectedIsland == "Jungle Island" then
+		player.Character.HumanoidRootPart.CFrame = CFrame.new(1389.97729, 93.1349182, -1897.78186)
+	elseif 
+	selectedIsland == "Hima Island" then
+		player.Character.HumanoidRootPart.CFrame = CFrame.new(-2622.52173, 113.539871, -1223.94434)
+	elseif
+	selectedIsland == "Island of Zou" then
+		player.Character.HumanoidRootPart.CFrame = CFrame.new(-267.20636, 91.4027939, -4583.92139)
+	end
+end
+
+
+
 	local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 	local Window = OrionLib:MakeWindow({Name = "Aeroila Hub | Pro Piece PRO MAX", HidePremium = false, IntroText = "Aeroila Hub | Pro Piece PRO MAX", SaveConfig = false, ConfigFolder = "AeroilaHubTest"})
 	local FarmTab = Window:MakeTab({
@@ -47,6 +72,12 @@ end;
 	})
 	local DFTab = Window:MakeTab({
 		Name = "Devil Fruit Farm",
+		Icon = "rbxassetid://4483345998",
+		PremiumOnly = false
+
+	})
+	local IslandTab = Window:MakeTab({
+		Name = "Teleport To Island",
 		Icon = "rbxassetid://4483345998",
 		PremiumOnly = false
 
@@ -102,6 +133,20 @@ end;
 				fruitToggle = Value
 			end
 		})
+IslandTab:AddDropdown({
+Name = "Islands To Teleport To",
+Default = selectedIsland,
+Options = islands,
+Callback = function(Value)
+selectedIsland = Value
+end    
+})
+IslandTab:AddButton({
+	Name = "Teleport To Island!",
+	Callback = function()
+      		 tpToIslands()
+  	end    
+})
 	task.spawn(function ()
 		while task.wait() do
 			if farmToggle then
@@ -193,3 +238,4 @@ end;
 		end
 	end
 end)
+

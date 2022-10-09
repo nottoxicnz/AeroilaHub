@@ -86,7 +86,7 @@ end
 
 	})
 	local IslandTab = Window:MakeTab({
-		Name = "Teleport To Island",
+		Name = "Teleport To Places",
 		Icon = "rbxassetid://4483345998",
 		PremiumOnly = false
 
@@ -242,7 +242,7 @@ IslandTab:AddButton({
 	task.spawn(function ()
 		while task.wait() do
 			if attackToggle then
-			workspace.World.Live[player.Name][weaponDropdown].Server.RemoteEvent:FireServer("M1")
+			workspace.World.Live[player.Name]:WaitForChild(weaponDropdown).Server.RemoteEvent:FireServer("M1")
 		end
 	end
 end)

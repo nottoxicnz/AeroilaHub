@@ -1,0 +1,157 @@
+-- // VARTIABLES //
+local player = game.Players.LocalPlayer
+local hrp = player.Character.HumanoidRootPart
+-- // TABLES //
+local questDropdown = "Bandit"
+local toolDropdown = "Fist"
+local mobDropdown = "Bandit"
+local quests = {}
+local mobs = {}
+local tools = {}
+-- // TOGGLES //
+local farmToggle = false
+local attackToggle = false
+
+-- // ADD MOBS TO DROPDOWN //
+for _,v in pairs(game:GetService("Workspace").Live:GetChildren()) do 
+	insert = true 
+	for _,v2 in pairs(mobs) do if v2 == v.Name then insert = false end end 
+	if insert then table.insert(mobs, v.Name) end 
+end
+
+-- // ADD TOOL TO DROPDOWN //
+for i,v in pairs(player.Backpack:GetChildren()) do
+    if v:IsA("Tool") and v.Parent then
+        table.insert(tools, v.Name)
+    end
+end
+
+-- // ADD QUESTS TO DROPDOWN //
+for _,v in pairs(game:GetService("Workspace").QuestNpc:GetChildren()) do 
+	insert = true 
+	for _,v2 in pairs(quests) do if v2 == v.Name then insert = false end end 
+	if insert then table.insert(quests, v.Name) end 
+end
+
+-- // REMOVE PLAYERS FROM DROPDOWN // 
+for i,players in pairs(game.Players:GetPlayers()) do
+	for i,v in pairs(mobs) do
+	if v == players.Name then
+		table.remove(mobs, i)
+		end
+	end
+end
+
+
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "Aeroila Hub | A Piece Script", HidePremium = false, IntroText = "Aeroila Hub | A Piece Script", SaveConfig = false, ConfigFolder = "AeroilaHubTest"})
+local FarmTab = Window:MakeTab({
+Name = "Auto Farm",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+local QuestTab = Window:MakeTab({
+Name = "Auto Quest",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+FarmTab:AddDropdown({
+Name = "Mobs To Farm",
+Default = mobDropdown,
+Options = mobs,
+Callback = function(Value)
+mobDropdown = Value
+end    
+})
+FarmTab:AddToggle({
+Name = "Auto Farm",
+Default = false,
+Callback = function(Value)
+farmToggle = Value
+end
+})
+FarmTab:AddToggle({
+Name = "Auto Attack",
+Default = false,
+Callback = function(Value)
+attackToggle = Value
+end
+})
+FarmTab:AddLabel(" ")
+FarmTab:AddDropdown({
+Name = "Weapon To Equip",
+Default = toolDropdown,
+Options = tools,
+Callback = function(Value)
+toolDropdown = Value
+end    
+})
+FarmTab:AddToggle({
+Name = "Auto Equip",
+Default = false,
+Callback = function(Value)
+equipToggle = Value
+end
+})
+QuestTab:AddDropdown({
+Name = "Choose Quest To Farm",
+Default = questDropdown,
+Options = quests,
+Callback = function(Value)
+questDropdown = Value
+end    
+})
+QuestTab:AddToggle({
+Name = "Grab Quest",
+Default = false,
+Callback = function(Value)
+questToggle = Value
+end
+})
+task.spawn(function ()
+	while task.wait() do
+		if farmToggle then
+			for i,v in pairs(game:GetService("Workspace").Live:GetDescendants()) do
+				if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Name == mobDropdown then
+				repeat
+				game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,5)
+			task.wait()
+				until v.Humanoid.Health == 0
+				if v.Humanoid.Health == 0 then wait(0.1) v:Destroy() break; end
+				end
+			end
+		end
+	end
+end)
+task.spawn(function ()
+    while task.wait() do
+        if attackToggle then
+            game:GetService("ReplicatedStorage").Remotes.Cast:FireServer("Fist","M1",1,hrp.CFrame)
+            game:GetService("ReplicatedStorage").Remotes.Cast:FireServer("Fist","M1",2,hrp.CFrame)
+        end
+    end
+end)
+task.spawn(function ()
+while task.wait() do
+    if equipToggle then
+         for i,v in pairs(player.Backpack:GetChildren()) do
+			if v.name == toolDropdown then
+				v.Parent = player.Character
+             end
+         end
+     end
+  end
+end)
+task.spawn(function ()
+    while task.wait() do
+        if questToggle then
+            for i,v in pairs(game:GetService("Workspace").QuestNpc:GetChildren()) do
+                if v:FindFirstChild("Right Leg") and v:FindFirstChildOfClass("ClickDetector") and v.Name == questDropdown then
+                    hrp.CFrame = v["Right Leg"].CFrame
+                task.wait(0.2)
+                fireclickdetector(v.ClickDetector)
+                end
+            end
+        end
+    end
+end)

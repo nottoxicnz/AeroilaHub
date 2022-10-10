@@ -8,7 +8,7 @@ local farmToggle = false
 local questToggle = false
 local instaToggle = false
 local selectedIsland = "Starter Island"
-local islands = {"Starter Island", "Desert", "Jungle Island", "Hima Island", "Island of Zou"}
+local islands = {"Starter Island", "Desert", "Jungle Island", "Hima Island", "Island of Zou","Cursed Island(Seabeast spawn)"}
 local mobDropdown = "Thief"
 local mobs = {}
 local questDropdown = "Thief Quest"
@@ -60,6 +60,9 @@ function tpToIslands()
 	elseif
 	selectedIsland == "Island of Zou" then
 		player.Character.HumanoidRootPart.CFrame = CFrame.new(-267.20636, 91.4027939, -4583.92139)
+	elseif 
+	selcetedIsland == "Cursed Island(Seabeast spawn)" then
+		player.Character.HumanoidRootPart.CFrame = CFrame.new(1506.03223, 121.317871, -3511.93701)
 	end
 end
 

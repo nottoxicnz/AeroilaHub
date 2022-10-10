@@ -1,4 +1,5 @@
 local player = game.Players.LocalPlayer
+local hrp = player.Character.HumanoidRootPart
 local VIM = game:service("VirtualInputManager")
 local islandTeleportToggle = false
 local attackToggle = false
@@ -8,13 +9,13 @@ local farmToggle = false
 local questToggle = false
 local instaToggle = false
 local selectedIsland = "Starter Island"
-local islands = {"Starter Island", "Desert", "Jungle Island", "Hima Island", "Island of Zou","Cursed Island(Seabeast spawn)"}
+local islands = {"Starter Island", "Desert", "Jungle Island", "Hima Island", "Island of Zou","Cursed Island"}
 local mobDropdown = "Thief"
 local mobs = {}
 local questDropdown = "Thief Quest"
 local quests = {"Thief Quest", "Buff Thief Quest", "Desert Thief Quest", "Desert Swordsmand Quest", "Monkey Quest", "Buff Monkey Quest", "Blizzard Bandit Quest", "Yeti Quest", "Mink Quest", "Pro Mink Quest"}
 local weaponDropdown = "Combat"
-local weapons = {}
+local weaponTable = {}
 for _,v in pairs(game:GetService("Workspace").World.Live:GetChildren()) do -- LOOPS THROUGH ALL MOBS
 	insert = true -- VALUE TO CHECK THE MOB
 	for _,v2 in pairs(mobs) do if v2 == v.Name then insert = false end end -- CHECKS IF MOB IS ALREADY IN THE TABLE
@@ -25,10 +26,27 @@ table.sort(mobs)
 
 for i,v in pairs(player.Backpack:GetChildren()) do
 	if v:IsA("Tool") then
-		table.insert(weapons, v.Name)
+		table.insert(weaponTable, v.Name)
 	end
 end
 
+player.Backpack.ChildAdded:Connect(function() 
+        for i,v in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
+			if v:IsA("Tool") and v.Parent then
+				table.insert(weaponTable, v.Name) end 
+    weaponTable:Refresh(weaponDropdown)
+end
+end)
+
+player.Backpack.ChildRemoved:Connect(function ()
+for _,v2 in pairs(weaponTable) do table.remove(weaponTable, _) end
+for _,v in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
+	insert = true
+	for _,v3 in pairs(weaponTable) do if v2 == v.Name then insert = false end end
+	if insert then table.insert(weaponTable, v.Name) end
+end
+weaponTable:Refresh(weaponDropdown)
+end)
 -- // ANTI AFK //
 for i, v in next, getconnections(game.Players.LocalPlayer.Idled) do
     v:Disable();
@@ -44,124 +62,117 @@ for i,players in pairs(game.Players:GetPlayers()) do
 end
 
 -- // FUNCTIONS //
-
-function tpToIslands()
-	if selectedIsland == "Starter Island" then
-		player.Character.HumanoidRootPart.CFrame = CFrame.new(-23.2552795, 116.013466, 269.995972)
+function IslandsTp()
+    if selectedIsland == "Starter Island" then
+		hrp.CFrame = CFrame.new(-23.2552795, 116.013466, 269.995972)
 	elseif 
 	selectedIsland == "Desert" then
-		player.Character.HumanoidRootPart.CFrame = CFrame.new(-419.57431, 117.407639, -1898.2561)
+		hrp.CFrame = CFrame.new(-419.57431, 117.407639, -1898.2561)
 	elseif 
 	selectedIsland == "Jungle Island" then
-		player.Character.HumanoidRootPart.CFrame = CFrame.new(1389.97729, 93.1349182, -1897.78186)
+		hrp.CFrame = CFrame.new(1389.97729, 93.1349182, -1897.78186)
 	elseif 
 	selectedIsland == "Hima Island" then
-		player.Character.HumanoidRootPart.CFrame = CFrame.new(-2622.52173, 113.539871, -1223.94434)
+		hrp.CFrame = CFrame.new(-2622.52173, 113.539871, -1223.94434)
 	elseif
 	selectedIsland == "Island of Zou" then
-		player.Character.HumanoidRootPart.CFrame = CFrame.new(-267.20636, 91.4027939, -4583.92139)
+		hrp.CFrame = CFrame.new(-267.20636, 91.4027939, -4583.92139)
 	elseif 
-	selcetedIsland == "Cursed Island(Seabeast spawn)" then
-		player.Character.HumanoidRootPart.CFrame = CFrame.new(1506.03223, 121.317871, -3511.93701)
+	selectedIsland == "Cursed Island" then
+		hrp.CFrame = CFrame.new(1506.03223, 121.317871, -3511.9370)
 	end
 end
 
-
-
-	local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-	local Window = OrionLib:MakeWindow({Name = "Aeroila Hub | Pro Piece PRO MAX", HidePremium = false, IntroText = "Aeroila Hub | Pro Piece PRO MAX", SaveConfig = false, ConfigFolder = "AeroilaHubTest"})
-	local FarmTab = Window:MakeTab({
-		Name = "Auto Farm",
-		Icon = "rbxassetid://4483345998",
-		PremiumOnly = false
-
-	})
-	local QuestTab = Window:MakeTab({
-		Name = "Auto Quest",
-		Icon = "rbxassetid://4483345998",
-		PremiumOnly = false
-
-	})
-	local DFTab = Window:MakeTab({
-		Name = "Devil Fruit Farm",
-		Icon = "rbxassetid://4483345998",
-		PremiumOnly = false
-
-	})
-	local IslandTab = Window:MakeTab({
-		Name = "Teleport To Places",
-		Icon = "rbxassetid://4483345998",
-		PremiumOnly = false
-
-	})
-	FarmTab:AddDropdown({
-		Name = "Mobs To Farm",
-		Default = mobDropdown,
-		Options = mobs,
-		Callback = function(Value)
-		mobDropdown = Value
-		end    
-		})
-	FarmTab:AddToggle({
-		Name = "Auto Farm",
-		Default = false,
-		Callback = function(Value)
-			farmToggle = Value
-		end
-	})
-	FarmTab:AddLabel(" ")
-	FarmTab:AddDropdown({
-		Name = "Select Weapon To Farm With",
-		Default = weaponDropdown,
-		Options = weapons,
-		Callback = function(Value)
-		weaponDropdown = Value
-		end    
-		})
-		FarmTab:AddToggle({
-			Name = "Auto Equip",
-			Default = false,
-			Callback = function(Value)
-				weaponToggle = Value
-			end
-		})
-	FarmTab:AddToggle({
-		Name = "Auto Attack",
-		Default = false,
-		Callback = function(Value)
-			attackToggle = Value
-		end
-	})
-	FarmTab:AddToggle({
-		Name = "InstaKill",
-		Default = false,
-		Callback = function(Value)
-			instaToggle = Value
-		end
-	})
-	FarmTab:AddLabel(" ")
-	QuestTab:AddDropdown({
-		Name = "Select Quest",
-		Default = questDropdown,
-		Options = quests,
-		Callback = function(Value)
-		questDropdown = Value
-		end    
-		})
-	QuestTab:AddToggle({
-			Name = "Auto Get Quest",
-			Default = false,
-			Callback = function(Value)
-				questToggle = Value
-			end
-		})
-		DFTab:AddToggle({
-			Name = "Auto Farm Devil Fruits",
-			Default = false,
-			Callback = function(Value)
-				fruitToggle = Value
-			end
-		})
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "Aeroila Hub | Pro Piece PRO MAX", HidePremium = false, IntroText = "Aeroila Hub | Pro Piece PRO MAX", SaveConfig = false, ConfigFolder = "AeroilaHubTest"})
+local FarmTab = Window:MakeTab({
+Name = "Auto Farm",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+local QuestTab = Window:MakeTab({
+Name = "Auto Quest",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+local DFTab = Window:MakeTab({
+Name = "Devil Fruit Farm",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+local IslandTab = Window:MakeTab({
+Name = "Teleport To Places",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+FarmTab:AddDropdown({
+Name = "Mobs To Farm",
+Default = mobDropdown,
+Options = mobs,
+Callback = function(Value)
+mobDropdown = Value
+end    
+})
+FarmTab:AddToggle({
+Name = "Auto Farm",
+Default = false,
+Callback = function(Value)
+farmToggle = Value
+end
+})
+FarmTab:AddLabel(" ")
+FarmTab:AddDropdown({
+	Name = "Select Weapon To Farm With",
+Default = weaponDropdown,
+Options = weaponTable,
+Callback = function(Value)
+weaponDropdown = Value
+end    
+})
+FarmTab:AddToggle({
+Name = "Auto Equip",
+Default = false,
+Callback = function(Value)
+weaponToggle = Value
+end
+})
+FarmTab:AddToggle({
+Name = "Auto Attack",
+Default = false,
+Callback = function(Value)
+attackToggle = Value
+end
+})
+FarmTab:AddToggle({
+Name = "InstaKill",
+Default = false,
+Callback = function(Value)
+instaToggle = Value
+end
+})
+FarmTab:AddLabel(" ")
+QuestTab:AddDropdown({
+Name = "Select Quest",
+Default = questDropdown,
+Options = quests,
+Callback = function(Value)
+questDropdown = Value
+end    
+})
+QuestTab:AddToggle({
+Name = "Auto Get Quest",
+Default = false,
+Callback = function(Value)
+questToggle = Value
+end
+})
+DFTab:AddToggle({
+Name = "Auto Farm Devil Fruits",
+Default = false,
+Callback = function(Value)
+fruitToggle = Value
+end
+})
 IslandTab:AddDropdown({
 Name = "Islands To Teleport To",
 Default = selectedIsland,
@@ -171,63 +182,63 @@ selectedIsland = Value
 end    
 })
 IslandTab:AddButton({
-	Name = "Teleport To Island!",
-	Callback = function()
-      		 tpToIslands()
-  	end    
+Name = "Teleport To Island!",
+Callback = function()
+IslandsTp()
+end    
 })
-	task.spawn(function ()
-		while task.wait() do
-			if farmToggle then
-				for i,v in pairs(game:GetService("Workspace").World.Live:GetDescendants()) do
-					if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Name == mobDropdown then
-					repeat
-						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,5)
-					task.wait()
-					until v.Humanoid.Health == 0
-					if v.Humanoid.Health == 0 then wait(0.1) v:Destroy() break; end
-					end
+task.spawn(function ()
+	while task.wait() do
+		if farmToggle then
+			for i,v in pairs(game:GetService("Workspace").World.Live:GetDescendants()) do
+				if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Name == mobDropdown then
+				repeat
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,5)
+			task.wait()
+				until v.Humanoid.Health == 0
+				if v.Humanoid.Health == 0 then wait(0.1) v:Destroy() break; end
 				end
 			end
 		end
-	end)
+	end
+end)
 
-	task.spawn(function ()
-		while task.wait(0.5) do
-			if questToggle then
-				if questDropdown == "Thief Quest" then
-					game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 1})
-				elseif
+task.spawn(function ()
+	while task.wait(0.5) do
+		if questToggle then
+			if questDropdown == "Thief Quest" then
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 1})
+			elseif
 				questDropdown == "Buff Thief Quest" then
-					game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 3})
-				elseif
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 3})
+			elseif
 				questDropdown == "Desert Thief Quest" then
-					game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 2})
-				elseif
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 2})
+			elseif
 				questDropdown == "Desert Swordsmand Quest" then
-					game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 4})
-				elseif
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 4})
+			elseif
 				questDropdown == "Monkey Quest" then
 					game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 5})
-				elseif
+			elseif
 				questDropdown == "Buff Monkey Quest" then
-					game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 6})
-				elseif
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 6})
+			elseif
 				questDropdown == "Blizzard Bandit Quest" then
-					game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 7})
-				elseif
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 7})
+			elseif
 				questDropdown == "Yeti Quest" then
-					game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 8})
-				elseif
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 8})
+			elseif
 				questDropdown == "Mink Quest" then
-					game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 9})
-				elseif
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 9})
+			elseif
 				questDropdown == "Pro Mink Quest" then
-					game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 10})
-				end
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 10})
 			end
 		end
-	end)
+	end
+end)
 
 	task.spawn(function ()
 		while task.wait() do
@@ -254,7 +265,7 @@ task.spawn(function ()
 while task.wait() do
 	if fruitToggle then
 		for i,v in pairs(game:GetService("Workspace").DFSpawns:GetDescendants()) do
-			if v.Name == "Handle" and v.ClassName == "MeshPart" and v.Parent then
+			if v.Name == "Handle" and v.ClassName == "MeshPart" or v.ClassName == "Part" and v.Parent then
 				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
 			task.wait(0.3)
 			local function hold(keyCode, time)

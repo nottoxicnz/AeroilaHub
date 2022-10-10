@@ -2,7 +2,7 @@
 local player = game.Players.LocalPlayer
 local hrp = player.Character.HumanoidRootPart
 -- // TABLES //
-local questDropdown = "Bandit"
+local questDropdown = ""
 local toolDropdown = "Fist"
 local mobDropdown = "Bandit"
 local quests = {}
@@ -146,8 +146,7 @@ task.spawn(function ()
     while task.wait() do
         if questToggle then
             for i,v in pairs(game:GetService("Workspace").QuestNpc:GetChildren()) do
-                if v:FindFirstChild("Right Leg") and v:FindFirstChildOfClass("ClickDetector") and v.Name == questDropdown then
-                    hrp.CFrame = v["Right Leg"].CFrame
+                if  v:FindFirstChildOfClass("ClickDetector") and v.Name == questDropdown and v.Parent then
                 task.wait(0.2)
                 fireclickdetector(v.ClickDetector)
                 end

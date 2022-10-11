@@ -1,26 +1,63 @@
--- // VARIABLES //
 local player = game.Players.LocalPlayer
-local VIM = game:service("VirtualInputManager")
 local hrp = player.Character.HumanoidRootPart
-local quests = {"Thief Quest", "Buff Thief Quest", "Desert Thief Quest", "Desert Swordsmand Quest", "Monkey Quest", "Buff Monkey Quest", "Blizzard Bandit Quest", "Yeti Quest", "Mink Quest", "Pro Mink Quest"}
+local VIM = game:service("VirtualInputManager")
+local islandTeleportToggle = false
+local bossToggle = false
+local attackToggle = false
+local weaponToggle = false
+local fruitToggle = false
+local farmToggle = false
+local questToggle = false
+local instaToggle = false
+local selectedIsland = "Starter Island"
 local islands = {"Starter Island", "Desert", "Jungle Island", "Hima Island", "Island of Zou","Cursed Island"}
-local npcs = {}
-local tools = {}
+local mobdropdown = "Thief"
 local mobs = {}
-getgenv().npc = nil
-getgenv().mob = nil
-getgenv().tool = nil
-getgenv().island = nil
-getgenv().quest = nil
-
--- // ADD MOBS TO DROPDOWN //
-for i,v in pairs(game:GetService("Workspace").World.Live:GetChildren()) do
-    insert = true
-    for i,v2 in pairs(mobs) do if v2 == v.Name then insert = false end end
-    if insert then table.insert(mobs, v.Name) end
+local questDropdown = "Thief Quest"
+local quests = {"Thief Quest", "Buff Thief Quest", "Desert Thief Quest", "Desert Swordsmand Quest", "Monkey Quest", "Buff Monkey Quest", "Blizzard Bandit Quest", "Yeti Quest", "Mink Quest", "Pro Mink Quest"}
+local weaponDropdown = "Combat"
+local weaponTable = {}
+for _,v in pairs(game:GetService("Workspace").World.Live:GetChildren()) do -- LOOPS THROUGH ALL MOBS
+	insert = true -- VALUE TO CHECK THE MOB
+	for _,v2 in pairs(mobs) do if v2 == v.Name then insert = false end end -- CHECKS IF MOB IS ALREADY IN THE TABLE
+	if insert then table.insert(mobs, v.Name) end -- IF THE MOB ISNT INSERTED THEN INSERT IT
+end
+table.sort(mobs)
+for i,v in pairs(player.Backpack:GetChildren()) do
+	if v:IsA("Tool") then
+		table.insert(weaponTable, v.Name)
+	end
 end
 
--- // REMOVE PLAYERS FROM DROPDOWN //
+
+-- // DROPDOWN REFRESH //
+game:GetService("Workspace").World.Live.ChildAdded:Connect(function() 
+    for _,v2 in pairs(mobs) do table.remove(mobs, v2.Name) end 
+    -- ADDS THE NEW MOBS
+    for _,v in pairs(game:GetService("Workspace").World.Live:GetChildren()) do 
+        insert = true 
+        for _,v2 in pairs(mobs) do if v2 == v.Name then insert = false end end 
+        if insert then table.insert(mobs, v.Name) end 
+    end
+    mobs:Refresh(mobdropdown)
+end)
+
+game:GetService("Workspace").World.Live.ChildRemoved:Connect(function() 
+    for _,v2 in pairs(mobs) do table.remove(mobs, v2.Name) end 
+    for _,v in pairs(game:GetService("Workspace").World.Live:GetChildren()) do 
+        insert = true 
+        for _,v2 in pairs(mobs) do if v2 == v.Name then insert = false end end 
+        if insert then table.insert(mobs, v.Name) end 
+    end
+    mobs:Refresh(mobdropdown)
+end)
+
+-- // ANTI AFK //
+for i, v in next, getconnections(game.Players.LocalPlayer.Idled) do
+    v:Disable();
+end;
+
+	-- // REMOVE PLAYERS //
 for i,players in pairs(game.Players:GetPlayers()) do
 	for i,v in pairs(mobs) do
 	if v == players.Name then
@@ -29,179 +66,212 @@ for i,players in pairs(game.Players:GetPlayers()) do
 	end
 end
 
--- // ADDS WEAPONS TO DROPDOWN //
-for i,v in pairs(player.Backpack:GetChildren()) do
-    if v:IsA("Tool") and v.Parent then
-        table.insert(tools, v.Name)
-    end
-end
-
--- // ADD NPCS TO DROPDOWN //
-for _,v in pairs(game:GetService("Workspace").World.NPC:GetChildren()) do 
-	insert = true 
-	for _,v2 in pairs(npcs) do if v2 == v.Name then insert = false end end 
-	if insert then table.insert(npcs, v.Name) end 
-end
-
--- // ANTI AFK //
-for i, v in next, getconnections(game.Players.LocalPlayer.Idled) do
-    v:Disable();
-end;
 -- // FUNCTIONS //
-function islandTP()
-    if getgenv().island == "Starter Island" then
+function IslandsTp()
+    if selectedIsland == "Starter Island" then
 		hrp.CFrame = CFrame.new(-23.2552795, 116.013466, 269.995972)
 	elseif 
-	getgenv().island == "Desert" then
+	selectedIsland == "Desert" then
 		hrp.CFrame = CFrame.new(-419.57431, 117.407639, -1898.2561)
 	elseif 
-	getgenv().island == "Jungle Island" then
+	selectedIsland == "Jungle Island" then
 		hrp.CFrame = CFrame.new(1389.97729, 93.1349182, -1897.78186)
 	elseif 
-	getgenv().island == "Hima Island" then
+	selectedIsland == "Hima Island" then
 		hrp.CFrame = CFrame.new(-2622.52173, 113.539871, -1223.94434)
 	elseif
-	getgenv().island == "Island of Zou" then
+	selectedIsland == "Island of Zou" then
 		hrp.CFrame = CFrame.new(-267.20636, 91.4027939, -4583.92139)
 	elseif 
-	getgenv().island == "Cursed Island" then
+	selectedIsland == "Cursed Island" then
 		hrp.CFrame = CFrame.new(1506.03223, 121.317871, -3511.9370)
 	end
 end
 
-function collectQuest()
-    if getgenv().quest == "Thief Quest" then
-        game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 1})
-    elseif
-       getgenv().quest == "Buff Thief Quest" then
-        game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 3})
-    elseif
-    getgenv().quest == "Desert Thief Quest" then
-        game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 2})
-    elseif
-    getgenv().quest == "Desert Swordsmand Quest" then
-        game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 4})
-    elseif
-    getgenv().quest == "Monkey Quest" then
-            game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 5})
-    elseif
-    getgenv().quest == "Buff Monkey Quest" then
-        game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 6})
-    elseif
-    getgenv().quest == "Blizzard Bandit Quest" then
-        game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 7})
-    elseif
-    getgenv().quest == "Yeti Quest" then
-        game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 8})
-    elseif
-    getgenv().quest == "Mink Quest" then
-        game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 9})
-    elseif
-    getgenv().quest == "Pro Mink Quest" then
-        game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 10})
-    end
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "Aeroila Hub | Pro Piece PRO MAX", HidePremium = false, IntroText = "Aeroila Hub | Pro Piece PRO MAX", SaveConfig = false, ConfigFolder = "AeroilaHubTest"})
+local FarmTab = Window:MakeTab({
+Name = "Auto Farm",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+local QuestTab = Window:MakeTab({
+Name = "Auto Quest",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+local DFTab = Window:MakeTab({
+Name = "Devil Fruit Farm",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+local IslandTab = Window:MakeTab({
+Name = "Teleport To Places",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+FarmTab:AddDropdown({
+Name = "Mobs To Farm",
+Default = mobDropdown,
+Options = mobs,
+Callback = function(Value)
+mobDropdown = Value
+end    
+})
+FarmTab:AddToggle({
+Name = "Auto Farm",
+Default = false,
+Callback = function(Value)
+farmToggle = Value
 end
-
-function npcTP()
-    for i,v in pairs(game:GetService("Workspace").World.NPC:GetChildren()) do
-        if v:FindFirstChild("HumanoidRootPart") and v.Name == getgenv().npc then
-            hrp.CFrame = v.HumanoidRootPart.CFrame
-        end
-    end
+})
+FarmTab:AddLabel(" ")
+FarmTab:AddDropdown({
+Name = "Select Weapon To Farm With",
+Default = weaponDropdown,
+Options = weaponTable,
+Callback = function(Value)
+weaponDropdown = Value
+end    
+})
+FarmTab:AddToggle({
+Name = "Auto Equip",
+Default = false,
+Callback = function(Value)
+weaponToggle = Value
 end
--- UI LIBRARY
-local Library = loadstring(game:HttpGet("https:/raw.githubusercontent.com/Attrixx/Scandia/main/KavoUiLib.lua"))() 
-local Window = Library.CreateLib("Aeroila Hub | Pro Piece PRO MAX", "Ocean") 
-
--- MAIN
-local Main = Window:NewTab("Auto Farm") 
-local Quest = Window:NewTab("Auto Quest")
-local Misc = Window:NewTab("Misc")
-local MobFarmSection = Main:NewSection("Mob Farm") 
-local QuestFarmSection = Quest:NewSection("Collect Quest")
-local MiscSection = Misc:NewSection("Misc")
-
-
--- // AUTO FARM SECTION //
-local mobdropdown = MobFarmSection:NewDropdown("Choose Mob", "Chooses the mob to autofarm", mobs, function(v) -- CREATES A MOB DROPDOWN TO CHOOSE THE MOBS (USES THE TABLE FROM THE MOBS SECTION ABOVE)
-    getgenv().mob = v
-end)
-MobFarmSection:NewToggle("Start Mob Farm", "Toggles the autofarming of the mobs", function(v) 
-    getgenv().autofarmmobs = v
-    while wait() do -- INFINITE LOOP
-        if getgenv().autofarmmobs == false then return end 
-        if getgenv().mob == nil then
-            getgenv().autofarmmobs = false 
-            return 
-        end
-        local mob = game:GetService("Workspace").World.Live:FindFirstChild(getgenv().mob)
-        if mob == nil then
-            while wait() do 
-                wait() 
-                if getgenv().autofarmmobs == false then return end 
-                if game:GetService("Workspace").World.Live:FindFirstChild(getgenv().mob) ~= nil then break; end
-            end 
-        else
-            local mob2 = mob
-            while wait() do
-                mob = game:GetService("Workspace").World.Live:FindFirstChild(getgenv().mob)
-                if mob ~= mob2 then break; end
-                if getgenv().autofarmmobs == false then return end 
-                if mob ~= nil then
-                    if mob:FindFirstChild("Humanoid") then
-                        if mob.Humanoid.Health == 0 then wait(0.1) mob:Destroy() break; end 
-                    end
-                    if mob:FindFirstChild("HumanoidRootPart") then
-                        hrp.CFrame = mob.HumanoidRootPart.CFrame * CFrame.new(0,0,5)
-                    end
-                end
-                wait()
-            end
-        end
-    end
-end)
-MobFarmSection:NewToggle("Auto Attack", "Auto attacks mob", function(v)
-    getgenv().autoAttack = v
-    while task.wait() do
-        if not getgenv().autoAttack then return end
-        workspace.World.Live[player.Name]:WaitForChild(getgenv().tool).Server.RemoteEvent:FireServer("M1")
-        
-    end
-end)
-MobFarmSection:NewToggle("Insta Kill", "One shots all mobs except for the Sea beast", function(v)
-    getgenv().instakill = v
-    while wait() do
-        if not getgenv().instakill then return end
-    for i,v in pairs(game:GetService("Workspace").World.Live:GetDescendants()) do
-        local Humanoid = v:FindFirstChildOfClass("Humanoid")
-        if Humanoid and v:FindFirstChild("Info") and v.Info:FindFirstChild("Tags") and v.Info.Tags:FindFirstChild(player.Name) then
-            Humanoid.Health = 0
-        end
-    end
+})
+FarmTab:AddToggle({
+Name = "Auto Attack",
+Default = false,
+Callback = function(Value)
+attackToggle = Value
 end
+})
+FarmTab:AddToggle({
+Name = "InstaKill",
+Default = false,
+Callback = function(Value)
+instaToggle = Value
+end
+})
+FarmTab:AddLabel(" ")
+QuestTab:AddDropdown({
+Name = "Select Quest",
+Default = questDropdown,
+Options = quests,
+Callback = function(Value)
+questDropdown = Value
+end    
+})
+QuestTab:AddToggle({
+Name = "Auto Get Quest",
+Default = false,
+Callback = function(Value)
+questToggle = Value
+end
+})
+DFTab:AddToggle({
+Name = "Auto Farm Devil Fruits",
+Default = false,
+Callback = function(Value)
+fruitToggle = Value
+end
+})
+IslandTab:AddDropdown({
+Name = "Islands To Teleport To",
+Default = selectedIsland,
+Options = islands,
+Callback = function(Value)
+selectedIsland = Value
+end    
+})
+IslandTab:AddButton({
+Name = "Teleport To Island!",
+Callback = function()
+IslandsTp()
+end    
+})
+task.spawn(function ()
+	while task.wait() do
+		if farmToggle then
+			for i,v in pairs(game:GetService("Workspace").World.Live:GetDescendants()) do
+				if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Name == mobDropdown then
+				repeat
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,5)
+			task.wait()
+				until v.Humanoid.Health == 0
+				if v.Humanoid.Health == 0 then wait(0.1) v:Destroy() break; end
+				end
+			end
+		end
+	end
 end)
-local MobFarmSection = Main:NewSection("Weapon Equip")
-local toolDropdown = MobFarmSection:NewDropdown("Choose Weapon", "Chooses the weapon to attack with", tools, function(v) -- CREATES A MOB DROPDOWN TO CHOOSE THE MOBS (USES THE TABLE FROM THE MOBS SECTION ABOVE)
-    getgenv().tool = v
+
+task.spawn(function ()
+	while task.wait(0.5) do
+		if questToggle then
+			if questDropdown == "Thief Quest" then
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 1})
+			elseif
+				questDropdown == "Buff Thief Quest" then
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 3})
+			elseif
+				questDropdown == "Desert Thief Quest" then
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 2})
+			elseif
+				questDropdown == "Desert Swordsmand Quest" then
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 4})
+			elseif
+				questDropdown == "Monkey Quest" then
+					game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 5})
+			elseif
+				questDropdown == "Buff Monkey Quest" then
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 6})
+			elseif
+				questDropdown == "Blizzard Bandit Quest" then
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 7})
+			elseif
+				questDropdown == "Yeti Quest" then
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 8})
+			elseif
+				questDropdown == "Mink Quest" then
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 9})
+			elseif
+				questDropdown == "Pro Mink Quest" then
+				game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 10})
+			end
+		end
+	end
 end)
-MobFarmSection:NewToggle("Auto Equip", "Auto Equips the weapon", function(v)
-    getgenv().equipWeapon = v
-    while task.wait(0.1) do
-        if not getgenv().equipWeapon then return end
-        for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-            if v:IsA("Tool") and v.Name == getgenv().tool and v.Parent then
-                player.Character.Humanoid:EquipTool(v)
-            end
-        end
-    end
+
+	task.spawn(function ()
+		while task.wait() do
+			if instaToggle then
+			for i,v in pairs(game:GetService("Workspace").World.Live:GetDescendants()) do
+				local Humanoid = v:FindFirstChildOfClass("Humanoid")
+				if Humanoid and v:FindFirstChild("Info") and v.Info:FindFirstChild("Tags") and v.Info.Tags:FindFirstChild(player.Name) then
+					Humanoid.Health = 0
+				end
+			end
+		end
+	end
+	end)
+
+	task.spawn(function ()
+		while task.wait() do
+			if attackToggle then
+			workspace.World.Live[player.Name]:WaitForChild(weaponDropdown).Server.RemoteEvent:FireServer("M1")
+		end
+	end
 end)
-local MobFarmSection = Main:NewSection("Devil Fruit Farming")
-MobFarmSection:NewToggle("Farm Devil Fruits","Auto farms devil fruits", function(v)
-    getgenv()farmDevil = v
-    while task.wait() do
-        for i,v in pairs(game:GetService("Workspace").DFSpawns:GetDescendants()) do
+
+task.spawn(function ()
+while task.wait() do
+	if fruitToggle then
+		for i,v in pairs(game:GetService("Workspace").DFSpawns:GetDescendants()) do
 			if v.Name == "Handle" and v.ClassName == "MeshPart" or v.ClassName == "Part" and v.Parent then
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame + Vector3.new(0,3,0)
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
 			task.wait(0.3)
 			local function hold(keyCode, time)
 			VIM:SendKeyEvent(true, keyCode, false, game)
@@ -209,35 +279,42 @@ MobFarmSection:NewToggle("Farm Devil Fruits","Auto farms devil fruits", function
 			VIM:SendKeyEvent(false, keyCode, false, game)
 			end
 			hold(Enum.KeyCode.LeftControl, 10)
-        end
-    end
+			end
+		end
+	end
 end
 end)
--- // MISC SECTION // 
-local islandsdropdown = MiscSection:NewDropdown("Choose Island", "Chooses the island you want to teleport to", islands, function(v) -- CREATES A MOB DROPDOWN TO CHOOSE THE MOBS (USES THE TABLE FROM THE MOBS SECTION ABOVE)
-    getgenv().island = v
+
+task.spawn(function ()
+	while task.wait() do
+		if weaponToggle then
+			for i,v in pairs(player.Backpack:GetChildren()) do
+				if v.name == weaponDropdown then
+					v.Parent = player.Character
+				end
+			end
+		end
+	end
 end)
-MiscSection:NewButton("Teleport To Selected Island", "Teleports to the selected island", function()
-    islandTP()
+
+game.Players.LocalPlayer.Backpack.ChildAdded:Connect(function() 
+    for _,v2 in pairs(weaponTable) do table.remove(weaponTable, v.Name) end 
+    for _,v in pairs(game:GetService("Players").LocalPlayer:GetChildren()) do 
+        insert = true 
+        for _,v2 in pairs(weaponTable) do if v2 == v.Name then insert = false end end 
+        if insert then table.insert(weaponTable, v.Name) end 
+    end
+    weaponDropdown:Refresh(weaponTable)
 end)
-local MiscSection = Misc:NewSection("Teleport To NPCS")
-local NPCdropdown = MiscSection:NewDropdown("Choose NPC", "Chooses the NPC you want to teleport to", npcs, function(v) -- CREATES A MOB DROPDOWN TO CHOOSE THE MOBS (USES THE TABLE FROM THE MOBS SECTION ABOVE)
-    getgenv().npc = v
+
+game.Players.LocalPlayer.Backpack.ChildRemoved:Connect(function() 
+    for _,v2 in pairs(weaponTable) do table.remove(weaponTable, v.Name) end 
+    for _,v in pairs(game:GetService("Players").LocalPlayer:GetChildren()) do 
+        insert = true 
+        for _,v2 in pairs(weaponTable) do if v2 == v.Name then insert = false end end 
+        if insert then table.insert(weaponTable, v.Name) end 
+    end
+    weaponDropdown:Refresh(weaponTable)
 end)
-MiscSection:NewButton("Teleport To Selected NPC", "Teleports to the selected NPC", function()
-    npcTP()
-end)
-local MiscSection = Misc:NewSection("Random")
-MiscSection:NewSlider("WalkSpeed", "Changes the speed of the character.", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
-end)
-MiscSection:NewSlider("JumpPower", "Changes the JumpPower of the character.", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
-    game.Players.LocalPlayer.Character.Humanoid.JumpPower = s
-end)
--- // QUEST SECTION // 
-local questdropdown = QuestFarmSection:NewDropdown("Choose Quest", "Chooses the quest to farm", quests, function(v) -- CREATES A MOB DROPDOWN TO CHOOSE THE MOBS (USES THE TABLE FROM THE MOBS SECTION ABOVE)
-    getgenv().quest = v
-end)
-QuestFarmSection:NewButton("Grab Quest", "Grabs the selected quest", function()
-    collectQuest()
-end)
+
+OrionLib:Init()

@@ -110,13 +110,7 @@ function npcTP()
     end
 end
 
--- // NOTIFICATION //
-game.StarterGui:SetCore("SendNotification", {
-Title = "MUST READ"; 
-Text = "RE-EXECUTE TO SEE ADDED WEAPONS/MOBS LIKE SEA BEAST."; 
-Icon = ""; 
-Duration = 8; 
-})
+
 
 -- UI LIBRARY
 local Library = loadstring(game:HttpGet("https:/raw.githubusercontent.com/Attrixx/Scandia/main/KavoUiLib.lua"))() 

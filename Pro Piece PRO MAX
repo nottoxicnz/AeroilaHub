@@ -109,9 +109,6 @@ function npcTP()
         end
     end
 end
-
-
-
 -- UI LIBRARY
 local Library = loadstring(game:HttpGet("https:/raw.githubusercontent.com/Attrixx/Scandia/main/KavoUiLib.lua"))() 
 local Window = Library.CreateLib("Aeroila Hub | Pro Piece PRO MAX", "Ocean") 

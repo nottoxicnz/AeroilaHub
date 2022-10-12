@@ -25,6 +25,17 @@ for i,players in pairs(game.Players:GetPlayers()) do
 		end
 	end
 end
+
+-- // FUNCTIONS //
+function getQuest()
+    for i,v in pairs(game:GetService("Workspace").Interactable:GetDescendants()) do
+        if v:IsA("ClickDetector") and v.Parent.Parent.Name == getgenv().quest then
+            fireclickdetector(v)
+        end
+    end
+end
+
+
 -- UI LIBRARY
 local Library = loadstring(game:HttpGet("https:/raw.githubusercontent.com/Attrixx/Scandia/main/KavoUiLib.lua"))() 
 local Window = Library.CreateLib("Aeroila Hub | Sea Piece(W.I.P)", "Ocean") 
@@ -83,15 +94,6 @@ end)
 local questdropdown = QuestFarmSection:NewDropdown("Choose Quest", "Chooses the quest to autofarm", quests, function(v) -- CREATES A MOB DROPDOWN TO CHOOSE THE MOBS (USES THE TABLE FROM THE MOBS SECTION ABOVE)
     getgenv().quest = v
 end)
-
-QuestFarmSection:NewToggle("Auto Quest","Auto collects the selected quest", function(v)
-    getgenv().autofarmquest = v 
-    while task.wait() do
-        if not getgenv().autofarmquest then return end
-        for i,v in pairs(game:GetService("Workspace").Interactable:GetDescendants()) do
-            if v:IsA("ClickDetector") and v.Parent.Parent.Name == getgenv().quest then
-                fireclickdetector(v)
-            end
-        end
-    end
+QuestFarmSection:NewButton("Grab Quest", "Grabs the selected quest", function()
+    getQuest()
 end)

@@ -17,7 +17,6 @@ getgenv().island = nil
 
 getgenv().quest = nil
 
-getgenv().noclip = false
 
 -- // ADD MOBS TO DROPDOWN //
 for i,v in pairs(game:GetService("Workspace").World.Live:GetChildren()) do
@@ -49,7 +48,14 @@ for _,v in pairs(game:GetService("Workspace").World.NPC:GetChildren()) do
 	if insert then table.insert(npcs, v.Name) end 
 end
 
--- // ANTI AFK //
+
+-- // DELETE FAKE FRUIT //
+for i,v in pairs(game:GetService("Workspace").DFSpawns:GetChildren()) do
+    if v.Name == "Dark Root" then
+        v:Destroy()
+    end
+end
+
 -- // FUNCTIONS //
 function islandTP()
     if getgenv().island == "Starter Island" then
@@ -159,7 +165,7 @@ MobFarmSection:NewToggle("Start Mob Farm", "Toggles the autofarming of the mobs"
                         if mob.Humanoid.Health == 0 then wait(0.1) mob:Destroy() break; end 
                     end
                     if mob:FindFirstChild("HumanoidRootPart") then
-                        hrp.CFrame = mob.HumanoidRootPart.CFrame * CFrame.new(0,0,0) + Vector3.new(0, -9, 0)
+                        hrp.CFrame = mob.HumanoidRootPart.CFrame * CFrame.new(0,0,5)
                     end
                 end
             end
@@ -171,20 +177,7 @@ MobFarmSection:NewToggle("Auto Attack", "Auto attacks mob", function(v)
     while task.wait() do
         if not getgenv().autoAttack then return end
         workspace.World.Live[player.Name]:WaitForChild(getgenv().tool).Server.RemoteEvent:FireServer("M1")
-        
     end
-end)
-MobFarmSection:NewToggle("Insta Kill", "One shots all mobs except for the Sea beast", function(v)
-    getgenv().instakill = v
-    while wait() do
-        if not getgenv().instakill then return end
-    for i,v in pairs(game:GetService("Workspace").World.Live:GetDescendants()) do
-        local Humanoid = v:FindFirstChildOfClass("Humanoid")
-        if Humanoid and v:FindFirstChild("Info") and v.Info:FindFirstChild("Tags") and v.Info.Tags:FindFirstChild(player.Name) then
-            Humanoid.Health = 0
-        end
-    end
-end
 end)
 local MobFarmSection = Main:NewSection("Weapon Equip")
 local toolDropdown = MobFarmSection:NewDropdown("Choose Weapon", "Chooses the weapon to attack with", tools, function(v) -- CREATES A MOB DROPDOWN TO CHOOSE THE MOBS (USES THE TABLE FROM THE MOBS SECTION ABOVE)

@@ -7,11 +7,17 @@ local islands = {"Starter Island", "Desert", "Jungle Island", "Hima Island", "Is
 local npcs = {}
 local tools = {}
 local mobs = {}
+
 getgenv().npc = nil
 getgenv().mob = nil
+
 getgenv().tool = nil
+
 getgenv().island = nil
+
 getgenv().quest = nil
+
+getgenv().noclip = false
 
 -- // ADD MOBS TO DROPDOWN //
 for i,v in pairs(game:GetService("Workspace").World.Live:GetChildren()) do
@@ -44,9 +50,6 @@ for _,v in pairs(game:GetService("Workspace").World.NPC:GetChildren()) do
 end
 
 -- // ANTI AFK //
-for i, v in next, getconnections(game.Players.LocalPlayer.Idled) do
-    v:Disable();
-end;
 -- // FUNCTIONS //
 function islandTP()
     if getgenv().island == "Starter Island" then
@@ -111,15 +114,18 @@ function npcTP()
 end
 
 -- UI LIBRARY
-local Library = loadstring(game:HttpGet("https:/raw.githubusercontent.com/Attrixx/Scandia/main/KavoUiLib.lua"))() 
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+
 local Window = Library.CreateLib("Aeroila Hub | Pro Piece PRO MAX", "Ocean") 
 
 -- MAIN
 local Main = Window:NewTab("Auto Farm") 
 local Quest = Window:NewTab("Auto Quest")
+local player = Window:NewTab("Players")
 local Misc = Window:NewTab("Misc")
 local MobFarmSection = Main:NewSection("Mob Farm") 
 local QuestFarmSection = Quest:NewSection("Collect Quest")
+local playerSection =  player:NewSection("Players")
 local MiscSection = Misc:NewSection("Misc")
 
 
@@ -153,10 +159,9 @@ MobFarmSection:NewToggle("Start Mob Farm", "Toggles the autofarming of the mobs"
                         if mob.Humanoid.Health == 0 then wait(0.1) mob:Destroy() break; end 
                     end
                     if mob:FindFirstChild("HumanoidRootPart") then
-                        hrp.CFrame = mob.HumanoidRootPart.CFrame * CFrame.new(0,0,5)
+                        hrp.CFrame = mob.HumanoidRootPart.CFrame * CFrame.new(0,0,0) + Vector3.new(0, -9, 0)
                     end
                 end
-                wait()
             end
         end
     end
@@ -196,13 +201,14 @@ MobFarmSection:NewToggle("Auto Equip", "Auto Equips the weapon", function(v)
         end
     end
 end)
-local MobFarmSection = Main:NewSection("Devil Fruit Farming")
-MobFarmSection:NewToggle("Farm Devil Fruits","Auto farms devil fruits", function(v)
+-- // PLAYER SECTION //
+local playerSection = player:NewSection("Devil Fruit Sniper")
+playerSection:NewToggle("Farm Devil Fruits","Auto farms devil fruits", function(v)
     getgenv()farmDevil = v
     while task.wait() do
         for i,v in pairs(game:GetService("Workspace").DFSpawns:GetDescendants()) do
 			if v.Name == "Handle" and v.ClassName == "MeshPart" or v.ClassName == "Part" and v.Parent then
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame + Vector3.new(0,3,0)
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame * CFrame.new(0,0,3)
 			task.wait(0.3)
 			local function hold(keyCode, time)
 			VIM:SendKeyEvent(true, keyCode, false, game)
@@ -214,6 +220,7 @@ MobFarmSection:NewToggle("Farm Devil Fruits","Auto farms devil fruits", function
     end
 end
 end)
+
 -- // MISC SECTION // 
 local islandsdropdown = MiscSection:NewDropdown("Choose Island", "Chooses the island you want to teleport to", islands, function(v) -- CREATES A MOB DROPDOWN TO CHOOSE THE MOBS (USES THE TABLE FROM THE MOBS SECTION ABOVE)
     getgenv().island = v

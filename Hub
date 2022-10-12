@@ -54,31 +54,13 @@ MobFarmSection:NewToggle("Start Mob Farm", "Toggles the autofarming of the mobs"
     getgenv().autofarmmobs = v
     while wait() do
         if getgenv().autofarmmobs == false then return end 
-        if getgenv().mob == nil then
-            getgenv().autofarmmobs = false 
-            return 
-        end
-        local mob = game:GetService("Workspace").Live:FindFirstChild(getgenv().mob)
-        if mob == nil then
-            while wait() do 
-                wait() 
-                if getgenv().autofarmmobs == false then return end 
-                if game:GetService("Workspace").Live:FindFirstChild(getgenv().mob) ~= nil then break; end
-            end 
-        else
-            local mob2 = mob
-            while wait() do
-                mob = game:GetService("Workspace").Live:FindFirstChild(getgenv().mob)
-                if mob ~= mob2 then break; end
-                if getgenv().autofarmmobs == false then return end 
-                if mob ~= nil then
-                    if mob:FindFirstChild("Humanoid") then
-                        if mob.Humanoid.Health == 0 then wait(0.1) mob:Destroy() break; end 
-                    end
-                    if mob:FindFirstChild("HumanoidRootPart") then
-                        hrp.CFrame = mob.HumanoidRootPart.CFrame * CFrame.new(0,0,5)
-                    end
-                end
+        for i,v in pairs(game:GetService("Workspace").Live:GetDescendants()) do
+            if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Name == getgenv().mob then
+            repeat
+            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,5)
+        task.wait()
+            until v.Humanoid.Health == 0
+            if v.Humanoid.Health == 0 then wait(0.1) v:Destroy() break; end
             end
         end
     end

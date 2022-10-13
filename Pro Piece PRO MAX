@@ -66,6 +66,13 @@ for i,players in pairs(game.Players:GetPlayers()) do
 	end
 end
 
+-- // REMOVE FAKE FRUIT //
+for i,v in pairs(game:GetService("Workspace").DFSpawns:GetChildren()) do
+    if v.Name == "Dark Root" then
+        v:Destroy()
+    end
+end
+
 -- // FUNCTIONS //
 function IslandsTp()
     if selectedIsland == "Starter Island" then

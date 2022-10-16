@@ -72,15 +72,36 @@ end
         end
     end
 end
+function islandTP()
+    if getgenv().island == "Starter Island" then
+		hrp.CFrame = CFrame.new(-23.2552795, 116.013466, 269.995972)
+	elseif 
+	getgenv().island == "Desert" then
+		hrp.CFrame = CFrame.new(-419.57431, 117.407639, -1898.2561)
+	elseif 
+	getgenv().island == "Jungle Island" then
+		hrp.CFrame = CFrame.new(1389.97729, 93.1349182, -1897.78186)
+	elseif 
+	getgenv().island == "Hima Island" then
+		hrp.CFrame = CFrame.new(-2622.52173, 113.539871, -1223.94434)
+	elseif
+	getgenv().island == "Island of Zou" then
+		hrp.CFrame = CFrame.new(-267.20636, 91.4027939, -4583.92139)
+	elseif 
+	getgenv().island == "Cursed Island" then
+		hrp.CFrame = CFrame.new(1506.03223, 121.317871, -3511.9370)
+	end
+end
 -- // UI LIBRARY  //
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/lolpoppyus/Roblox-Lua/master/Pop%20UI%20Lib", true))()
 local FarmTab = library:Tab("Auto Farm")
 local QuestTab = library:Tab("Quest")
 local PlayerTab = library:Tab("Players")
+local MiscTab = library:Tab("Misc")
 FarmTab:Label("Auto Farm")
 QuestTab:Label("Auto Quest")
 PlayerTab:Label("Player Stuff")
-
+MiscTab:Label("Islands Teleport")
 
 local update = FarmTab:Dropdown("Choose Mobs", mobs, function(arg)
     getgenv().mob = arg
@@ -135,10 +156,21 @@ end)
 PlayerTab:Slider("Change JumpPower",  0,  100, function(arg)
 	player.Character.Humanoid.JumpPower = arg
 end)
+-- // MISC TAB //
+local islandsdropdown = MiscTab:Dropdown("TP To Island",   islands, function (v)
+    getgenv().island = v
+end)
 
+MiscTab:Button("Teleport To Selceted Island", function()
+    islandTP()
+end)
+
+MiscTab:Textstring("Discord", "JGg4zbDz")
+
+
+-- REFRESH DROPDOWN //
 while wait(1) do
     local npc = workspace.World.Live:GetChildren()
-    local players = game.Players:GetPlayers()
     for i,v in pairs(npc) do
         insert = true
         for _,v2 in pairs(mobs) do if v2 == v.Name then insert = false end end

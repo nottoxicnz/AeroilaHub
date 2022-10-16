@@ -130,7 +130,7 @@ end)
 
 FarmTab:Toggle("Insta Kill", function (v)
     getgenv().instakill = v
-    while wait() do
+    while task.wait() do
         if getgenv().instakill == false then return end
     for i,v in pairs(game:GetService("Workspace").World.Live:GetDescendants()) do
         local Humanoid = v:FindFirstChildOfClass("Humanoid")

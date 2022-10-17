@@ -33,6 +33,14 @@ for i,players in pairs(game.Players:GetPlayers()) do
         end
     end
 end
+-- // ANTI AFK //
+for i,v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
+    v:Disable()
+end
+-- // INSTANT PROXIMITY PROMPT / /
+game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(prompt)
+    prompt.HoldDuration = 0
+end)
 
 -- // FUNCTION //
 function IslandsTp()

@@ -6,9 +6,9 @@ local hrp = player.Character.HumanoidRootPart
 local tooltextdropdown = "Combat"
 local mobtextdropdown = "  "
 local selectedIsland = " "
-local islands = {"Starter Island", "Desert", "Jungle Island", "Hima Island", "Island of Zou","Cursed Island"}
-local quests = {"Thief Quest", "Buff Thief Quest", "Desert Thief Quest", "Desert Swordsmand Quest", "Monkey Quest", "Buff Monkey Quest", "Blizzard Bandit Quest", "Yeti Quest", "Mink Quest", "Pro Mink Quest"}
-local mobs = {"Thief", "Buff Thief", "Desert Thief", "Desert Swordsman", "Monkey", "Buff Monkey", "Blizzard bandit", "Yeti", "Mink", "Pro Mink"}
+local islands = {"Starter Island", "Desert", "Jungle Island", "Hima Island", "Island of Zou","Cursed Island", "Orange Town"}
+local quests = {"Thief Quest", "Buff Thief Quest", "Desert Thief Quest", "Desert Swordsmand Quest", "Monkey Quest", "Buff Monkey Quest", "Blizzard Bandit Quest", "Yeti Quest", "Mink Quest", "Pro Mink Quest", "Pirate Quest", "Pro Pirate Quest"}
+local mobs = {"Thief", "Buff Thief", "Desert Thief", "Desert Swordsman", "Monkey", "Buff Monkey", "Blizzard bandit", "Yeti", "Mink", "Pro Mink", "Pirate", "Pro Pirate"}
 local tools = {}
 
 -- // GLOBALS //
@@ -61,6 +61,9 @@ function IslandsTp()
 	elseif 
 	selectedIsland == "Cursed Island" then
 		hrp.CFrame = CFrame.new(1506.03223, 121.317871, -3511.9370)
+	elseif
+	selectedIsland == "Orange Town" then
+		hrp.CFrame = CFrame.new(-2308.80518, 93.5842667, -4217.13232)
 	end
 end
 
@@ -244,6 +247,11 @@ task.spawn(function ()
             getgenv().quest == "Pro Mink Quest" then
                 game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 10})
             elseif
+	    getgenv().quest == "Pirate Quest" then
+		game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 11})
+	    elseif getgenv().quest == "Pro Pirate Quest" then
+		game:GetService("Players").LocalPlayer.PlayerGui.DialougeGui.DialogModule.Sending:FireServer({["Key"] = "GetQuest",["QuestID"] = 12})
+	    elseif
             player.PlayerGui.MainGui.QuestBar.Visible == true then
             getgenv().autograbquest = false
             end

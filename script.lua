@@ -167,7 +167,7 @@ local MiscSection = MiscTab:AddSection({
 	Name = "                                         ISLAND TELEPORTS"
 })
 local Miscdropdown = MiscTab:AddDropdown({
-	Name = "Choose quest to farm",
+	Name = "Choose Island To Teleport To",
 	Default = selectedIsland,
 	Options = islands,
 	Callback = function(Value)

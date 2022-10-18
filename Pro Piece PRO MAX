@@ -188,7 +188,7 @@ while task.wait() do
                         end)
                         wait()
                         pcall(function()
-                            workspace.World.Live[player.Name][toolstextdropdown].Server.RemoteEvent:FireServer("M1")
+                            workspace.World.Live[player.Name].Combat.Server.RemoteEvent:FireServer("M1")
                         end)
                     until v == nil or v.Parent == nil or not v:FindFirstChild("Humanoid") or v.Humanoid.Health <= 0 or not getgenv().mob
                 end

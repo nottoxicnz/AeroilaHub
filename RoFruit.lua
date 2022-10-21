@@ -23,7 +23,7 @@ for _,v in pairs(game:GetService("Workspace").Mob:GetChildren()) do
 end
 
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "Aeroila Hub | TEST", HidePremium = false, IntroText = "Aeroila Hub | Pro Piece PRO MAX", SaveConfig = false, ConfigFolder = "OrionTest"})
+local Window = OrionLib:MakeWindow({Name = "Aeroila Hub | RO FRUITS", HidePremium = false, IntroText = "Aeroila Hub | RO FRUITS", SaveConfig = false, ConfigFolder = "OrionTest"})
 local FarmTab = Window:MakeTab({
 	Name = "Auto Farm",
 	Icon = "rbxassetid://9870325530",

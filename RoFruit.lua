@@ -38,6 +38,11 @@ local IslandTab = Window:MakeTab({
 	Icon = "rbxassetid://9870325530",
 	PremiumOnly = false
 })
+local MiscTab = Window:MakeTab({
+	Name = "Misc",
+	Icon = "rbxassetid://9870325530",
+	PremiumOnly = false
+})
 local FarmSection = FarmTab:AddSection({
 	Name = "                                      AUTO FARM"
 })
@@ -54,24 +59,6 @@ FarmTab:AddToggle({
 	Default = false,
 	Callback = function(Value)
         getgenv().autofarmmobs = Value
-	end    
-})
-local FarmSection = FarmTab:AddSection({
-	Name = "                           FAST FARM(Only works in public servers.)"
-})
-local bossdropdown = FarmTab:AddDropdown({
-	Name = "Select Boss",
-	Default = bosstext,
-	Options = bosss,
-	Callback = function(Value)
-		getgenv().bosses = Value
-	end    
-})
-FarmTab:AddToggle({
-	Name = "Fast'ish Level",
-	Default = false,
-	Callback = function(Value)
-        getgenv().autofastfarm = Value
 	end    
 })
 FarmTab:AddToggle({
@@ -125,7 +112,24 @@ PlayerTab:AddToggle({
         getgenv().autograbdevilfruit = Value
 	end    
 })
-
+MiscTab:AddButton({
+	Name = "Claim Codes!",
+	Callback = function()
+game:GetService("ReplicatedStorage").Code:FireServer("HalloweenUpdate")
+wait()
+game:GetService("ReplicatedStorage").Code:FireServer("2MVisits")
+wait()
+game:GetService("ReplicatedStorage").Code:FireServer("ZerosDevsTV")
+wait()
+game:GetService("ReplicatedStorage").Code:FireServer("DISCORD")
+wait()
+game:GetService("ReplicatedStorage").Code:FireServer("NEW")
+wait()
+game:GetService("ReplicatedStorage").Code:FireServer("SORRYBUGS")
+wait()
+game:GetService("ReplicatedStorage").Code:FireServer("EXTRA")
+end    
+})
 task.spawn(function ()
 	while task.wait() do
 		if getgenv().autograbdevilfruit then
@@ -144,33 +148,16 @@ task.spawn(function ()
 				for i,v in pairs(game:GetService("Workspace").Mob:GetChildren()) do
 					if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0  and v.Name == getgenv().mob then
 					repeat 
-						game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, -7, 0)
-						game:GetService("ReplicatedStorage").Document.Combat.Combat:FireServer()
-					task.wait()
+						game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 0, 7)
+						wait(0.7)
+						v:WaitForChild('Humanoid').Health = 0
+						task.wait()
 					until v.Humanoid.Health <= 0 or getgenv().autofarmmobs == false
 				end
 			end
 		end
 	end
 end)
-
-task.spawn(function ()
-	while task.wait() do
-		if getgenv().autofastfarm then
-			for i,v in pairs(game:GetService("Workspace").Mob:GetChildren()) do
-				if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0  and v.Name == getgenv().bosses then
-				repeat 
-					game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-					task.wait(1)
-					v:WaitForChild("Humanoid").Health = 0
-				task.wait()
-				until v.Humanoid.Health <= 0 or getgenv().autofastfarm == false
-			end
-		end
-	end
-end
-end)
-
 task.spawn(function ()
 	while task.wait() do
 		if getgenv().autoAttack then

@@ -3,6 +3,8 @@ local ISLANDS = game:GetService("Workspace").SpawnLocation:GetChildren()
 local hrp = player.Character.HumanoidRootPart
 
 local islands = {}
+local bosss = {"Sandia kimistuu [Lv.200]", "??? [Lv.250]", "Thor [Lv.350]", "Enma [Lv.400]", "Ryuma [Lv.500]", "Shank [Lv.900]", "Mihawk [Lv.1000]"}
+local bosstext = ""
 local mobs = {}
 local mobtext = ""
 local islandtext = ""
@@ -55,11 +57,29 @@ FarmTab:AddToggle({
         getgenv().autofarmmobs = Value
 	end    
 })
+local FarmSection = FarmTab:AddSection({
+	Name = "                           FAST FARM(Only works in public servers.)"
+})
+local bossdropdown = FarmTab:AddDropdown({
+	Name = "Select Boss",
+	Default = bosstext,
+	Options = bosss,
+	Callback = function(Value)
+		getgenv().bosses = Value
+	end    
+})
 FarmTab:AddToggle({
-	Name = "Fast Level",
+	Name = "Fast'ish Level",
 	Default = false,
 	Callback = function(Value)
         getgenv().autofastfarm = Value
+	end    
+})
+FarmTab:AddToggle({
+	Name = "Auto Attack",
+	Default = false,
+	Callback = function(Value)
+        getgenv().autoAttack = Value
 	end    
 })
 local IslandSection = IslandTab:AddSection({
@@ -74,7 +94,7 @@ local islanddropdown = IslandTab:AddDropdown({
 			if v.Name == Value then
 				for i,v in pairs(v:GetChildren()) do
 					if v:IsA("Part") and v.Name == "Loc" then
-						hrp.CFrame = v.CFrame
+						game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.CFrame
 					end
 				end
 			end
@@ -139,16 +159,24 @@ task.spawn(function ()
 	while task.wait() do
 		if getgenv().autofastfarm then
 			for i,v in pairs(game:GetService("Workspace").Mob:GetChildren()) do
-				if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0  and v.Name == "Ryuma [Lv.500]" then
+				if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0  and v.Name == getgenv().bosses then
 				repeat 
-					game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, -7, 0)
-					game:GetService("ReplicatedStorage").Document.Combat.Combat:FireServer()
-				task.wait(0.9)
+					game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+					task.wait(1)
 					v.Humanoid.Health = 0
 				task.wait()
 				until v.Humanoid.Health <= 0 or getgenv().autofastfarm == false
 			end
 		end
+	end
+end
+end)
+
+task.spawn(function ()
+	while task.wait() do
+		if getgenv().autoAttack then
+			game:GetService("ReplicatedStorage").Document.Combat.Combat:FireServer()
+		if getgenv().autoAttack == false then return end
 	end
 end
 end)

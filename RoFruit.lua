@@ -2,8 +2,6 @@ local player = game:GetService("Players").LocalPlayer
 local ISLANDS = game:GetService("Workspace").SpawnLocation:GetChildren()
 
 local islands = {}
-local bosss = {"Sandia kimistuu [Lv.200]", "??? [Lv.250]", "Thor [Lv.350]", "Enma [Lv.400]", "Ryuma [Lv.500]", "Shank [Lv.900]", "Mihawk [Lv.1000]"}
-local bosstext = ""
 local mobs = {}
 local mobtext = ""
 local islandtext = ""
@@ -152,7 +150,7 @@ task.spawn(function ()
 						wait(0.7)
 						v:WaitForChild('Humanoid').Health = 0
 						task.wait()
-					until getgenv().autofarmmobs == false
+					until v == nil or v.Humanoid.Health <= 0 or  getgenv().autofarmmobs == false
 				end
 			end
 		end

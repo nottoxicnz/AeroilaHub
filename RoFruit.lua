@@ -1,6 +1,5 @@
 local player = game:GetService("Players").LocalPlayer
 local ISLANDS = game:GetService("Workspace").SpawnLocation:GetChildren()
-local hrp = player.Character.HumanoidRootPart
 
 local islands = {}
 local bosss = {"Sandia kimistuu [Lv.200]", "??? [Lv.250]", "Thor [Lv.350]", "Enma [Lv.400]", "Ryuma [Lv.500]", "Shank [Lv.900]", "Mihawk [Lv.1000]"}

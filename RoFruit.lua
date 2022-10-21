@@ -144,7 +144,7 @@ task.spawn(function ()
 				for i,v in pairs(game:GetService("Workspace").Mob:GetChildren()) do
 					if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0  and v.Name == getgenv().mob then
 					repeat 
-						game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, -7, 0)
+						game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v:WaitForChild("HumanoidRootPart").CFrame * CFrame.new(0, -7, 0)
 						game:GetService("ReplicatedStorage").Document.Combat.Combat:FireServer()
 					task.wait()
 					until v.Humanoid.Health <= 0 or getgenv().autofarmmobs == false
@@ -160,7 +160,7 @@ task.spawn(function ()
 			for i,v in pairs(game:GetService("Workspace").Mob:GetChildren()) do
 				if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0  and v.Name == getgenv().bosses then
 				repeat 
-					game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+					game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v:WaitForChild("HumanoidRootPart").CFrame * CFrame.new(0, 0, 3)
 					task.wait(1)
 					v.Humanoid.Health = 0
 				task.wait()

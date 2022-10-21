@@ -22,7 +22,7 @@ for _,v in pairs(game:GetService("Workspace").Mob:GetChildren()) do
 end
 
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "Aeroila Hub | RO FRUITS", HidePremium = false, IntroText = "Aeroila Hub | RO FRUITS", SaveConfig = false, ConfigFolder = "OrionTest"})
+local Window = OrionLib:MakeWindow({Name = "Aeroila Hub | RO FRUIT", HidePremium = false, IntroText = "Aeroila Hub | RO FRUIT", SaveConfig = false, ConfigFolder = "OrionTest"})
 local FarmTab = Window:MakeTab({
 	Name = "Auto Farm",
 	Icon = "rbxassetid://9870325530",
@@ -148,11 +148,11 @@ task.spawn(function ()
 				for i,v in pairs(game:GetService("Workspace").Mob:GetChildren()) do
 					if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0  and v.Name == getgenv().mob then
 					repeat 
-						game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 0, 7)
+						game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 0, 6)
 						wait(0.7)
 						v:WaitForChild('Humanoid').Health = 0
 						task.wait()
-					until v.Humanoid.Health <= 0 or getgenv().autofarmmobs == false
+					until getgenv().autofarmmobs == false
 				end
 			end
 		end

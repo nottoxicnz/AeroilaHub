@@ -2,7 +2,7 @@ local player = game:GetService("Players").LocalPlayer
 local ISLANDS = game:GetService("Workspace").SpawnLocation:GetChildren()
 
 local islands = {}
-local mobs = {}
+local mobs = {"Deadly Pumpkin [LVL 1250]"}
 local mobtext = ""
 local islandtext = ""
 

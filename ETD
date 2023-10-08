@@ -1,6 +1,6 @@
-getgenv().autoUpgrade = true
-getgenv().autoPlace = true
-getgenv().autoFloor = true
+getgenv().autoUpgrade = nil
+getgenv().autoPlace = nil
+getgenv().autoFloor = nil
 
 
 
